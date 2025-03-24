@@ -1,8 +1,0 @@
-# ninja log v6
-3	51	1741969305192280459	CMakeFiles/Projet.dir/src/main.c.o	bf0377bc42a38eb7
-2	58	1741969049251484351	CMakeFiles/Projet.dir/src/find_exec.c.o	635220e9981ee592
-2	47	1742503851645278467	build.ninja	9f67a52104bbb196
-13	1036	1741968590231771943	CMakeFiles/Projet.dir/main.c.o	5931cfa8caf9849d
-2	849	1741969428984320909	Projet	ff8a53529e7e2b2b
-2	822	1741969049251484351	CMakeFiles/Projet.dir/src/open_image.c.o	953f88a4879b8379
-15	97	1741968590233771987	CMakeFiles/Projet.dir/find_exec.c.o	f396e2954dadf3e4
