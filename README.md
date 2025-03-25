@@ -18,8 +18,10 @@ et donc la diffusion.
 
 1. Vous devez concevoir un programme virus de type compagnon en langage C.
 2. Il sera écrit avec l'éditeur de texte de votre choix.
-3. Il portera le nom de MediaPlayer.exe et sera compilé avec [gcc](https://fr.wikipedia.org/wiki/GNU_Compiler_Collection).
-4. Il vous est conseillé de développer graduellement, fonction par fonction, et de visualiser point par point les retours de votre programme.
+3. Il portera le nom de MediaPlayer.exe et sera compilé
+   avec [gcc](https://fr.wikipedia.org/wiki/GNU_Compiler_Collection).
+4. Il vous est conseillé de développer graduellement, fonction par fonction, et de visualiser point par point les
+   retours de votre programme.
 
 ## Développement
 
@@ -77,12 +79,68 @@ make
 ### Utilisation de l'IA
 
 J'ai effectivement utilisé l'IA pour m'aider dans ce projet, mais uniquement pour :
-- Le fichier [init.sh](./init.sh) : Car je ne savais pas comment créer un script bash pour créer un dossier et y mettre des fichiers et cela n'a rien à voir avec le virus
-- Resolution des erreurs liées à la compilation avec [CMakeLists.txt](./CMakeLists.txt) : Car je ne savais pas comment configurer CMake pour compiler les fichiers sources
+
+- Le fichier [init.sh](./init.sh) : Car je ne savais pas comment créer un script bash pour créer un dossier et y mettre
+  des fichiers et cela n'a rien à voir avec le virus
+- Resolution des erreurs liées à la compilation avec [CMakeLists.txt](./CMakeLists.txt) : Car je ne savais pas comment
+  configurer CMake pour compiler les fichiers sources
 
 Pour tout le reste du projet, j'ai tout fait moi-même.
 
-## Détails des fichiers sources
+### Utilisation
 
-### [scanner.c](./scanner.c)
+Une fois le projet compilé, vous pouvez exécuter le virus avec la commande suivante :
 
+```bash
+cd ..
+./init.sh
+cd build
+./MediaPlayer.exe
+```
+
+Ce script initialise un dossier de test [sandbox](./sandbox) avec des fichiers de test ainsi que des images, puis la
+commande `./MediaPlayer.exe` exécute lance l'application, l'utilisateur devra choisir un dossier source (tout les
+programme de ce dossier et de ses sous-dossiers seront infectés). Le programme récupérera toutes les images et vidéos
+dans un menu à gauche et l'utilisateur pourra les visionner en cliquant dessus.
+
+### Bibliothèques utilisées
+
+- [stdio.h](https://en.wikipedia.org/wiki/Stdio.h) : Pour les entrées/sorties
+- [stdlib.h](https://en.wikipedia.org/wiki/Stdlib.h) : Pour les fonctions de conversion de chaînes, de gestion de la
+  mémoire, de recherche, de tri et d'autres fonctions
+- [string.h](https://en.wikipedia.org/wiki/String.h) : Pour les fonctions de manipulation de chaînes
+- [sys/stat.h](https://en.wikipedia.org/wiki/Sys/stat.h) : Pour les fonctions de manipulation de fichiers
+- [unistd.h](https://en.wikipedia.org/wiki/Unistd.h) : Pour les fonctions de gestion des fichiers et des répertoires
+- [dirent.h](https://en.wikipedia.org/wiki/Dirent.h) : Pour les fonctions de manipulation de répertoires
+- [errno.h](https://en.wikipedia.org/wiki/Errno.h) : Pour les fonctions de gestion des erreurs
+- [time.h](https://en.wikipedia.org/wiki/Time.h) : Pour les fonctions de gestion du temps
+- [gtk/gtk.h](https://en.wikipedia.org/wiki/GTK) : Pour les fonctions de gestion de l'interface graphique
+- [pthread.h](https://en.wikipedia.org/wiki/POSIX_Threads) : Pour les fonctions de gestion des threads
+
+### Détails de l'infection
+
+- Une fois le virus lancé et le dossier source choisi, le virus infectera tous les fichiers exécutables du dossier et de
+  ses sous-dossiers dans un thread séparé afin de ne pas bloquer l'interface graphique et de permettre à l'utilisateur
+  de continuer à naviguer dans les images et vidéos sans qu'il ne se rende compte de l'infection.
+- Les programmes infectés seront renommés avec le nom du programme original tandit que le programme original sera renommé avec l'extension `.old`
+- Si un programme infecté est exécuté, il executera le code du virus et transmettra l'exécution au programme original
+- Si un programme original est exécuté, il executera le code du programme original
+- Le virus ne peut pas infecter un programme déjà infecté
+
+### Système de Log
+
+- Le virus écrit des logs dans le fichier `log.txt` dans le dossier d'execution du MediaPlayer.exe
+
+---
+
+## Auteur
+
+- Anthony MUDET
+- UE Sécurité
+- Licence 3 Informatique - Semestre 6
+- La Rochelle Université - 2025
+
+---
+
+- TODO : Erreur dans l'infection
+- TODO : Finir le README

