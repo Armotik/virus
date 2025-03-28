@@ -70,22 +70,18 @@ et donc la diffusion.
 
 ### Compilation
 
+Ne pas oublier d'installer les dépendances avant de compiler le projet :
+
+```bash
+sudo apt install libgtk-3-dev
+sudo apt install imagemagick
+```
+
 ```bash
 cd build
 cmake ..
 make
 ```
-
-### Utilisation de l'IA
-
-J'ai effectivement utilisé l'IA pour m'aider dans ce projet, mais uniquement pour :
-
-- Le fichier [init.sh](./init.sh) : Car je ne savais pas comment créer un script bash pour créer un dossier et y mettre
-  des fichiers et cela n'a rien à voir avec le virus
-- Resolution des erreurs liées à la compilation avec [CMakeLists.txt](./CMakeLists.txt) : Car je ne savais pas comment
-  configurer CMake pour compiler les fichiers sources
-
-Pour tout le reste du projet, j'ai tout fait moi-même.
 
 ### Utilisation
 
@@ -116,6 +112,7 @@ dans un menu à gauche et l'utilisateur pourra les visionner en cliquant dessus.
 - [time.h](https://en.wikipedia.org/wiki/Time.h) : Pour les fonctions de gestion du temps
 - [gtk/gtk.h](https://en.wikipedia.org/wiki/GTK) : Pour les fonctions de gestion de l'interface graphique
 - [pthread.h](https://en.wikipedia.org/wiki/POSIX_Threads) : Pour les fonctions de gestion des threads
+- [limits.h](https://en.wikipedia.org/wiki/Limits.h) : Pour les constantes de limites
 
 ### Détails de l'infection
 
@@ -139,8 +136,3 @@ dans un menu à gauche et l'utilisateur pourra les visionner en cliquant dessus.
 - UE Sécurité
 - Licence 3 Informatique - Semestre 6
 - La Rochelle Université - 2025
-
----
-
-- TODO : Erreur dans l'infection
-- TODO : Finir le README

